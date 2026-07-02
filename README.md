@@ -1,6 +1,6 @@
 # bait_dnn_backdoor_attack
 
-Reimplementation of the BAIT backdoor attack on DNNs.
+Reimplementation of the BAIT backdoor attack on DNNs from the paper "BAIT: A New DNN Backdoor Attack Using Inpainted Triggers".
 
 ### Source
 
