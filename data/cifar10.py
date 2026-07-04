@@ -6,6 +6,8 @@ import torch
 import torchvision
 import torchvision.transforms as T
 
+from torch.utils.data import DataLoader, Subset
+
 ###############################
 # data augmentation pipelines #
 ###############################
@@ -32,20 +34,26 @@ test_transforms = T.Compose([
 # Loader functions #
 ####################
 
-def setup_dataloaders():
+def setup_dataloaders(batch_size):
     """
     Loads (and in case downloads) the CIFAR10 datasets and creates
     both training and test dataloaders
     """
     print("Loading datasets......")
-    trainset = torchvision.datasets.CIFAR10(
+    # Sets torchvision datasets
+    train_set = torchvision.datasets.CIFAR10(
         root = "./data/", 
         train = True, download = True, 
         transform = base_transforms
     )
-    testset = torchvision.datasets.CIFAR10(
+    test_set = torchvision.datasets.CIFAR10(
         root = "./data/", 
         train = False, download = True, 
         transform = base_transforms
     )
+    # Sets torchvision dataloaders
+    train_loader = DataLoader(train_set, batch_size = batch_size, shuffle = True)
+    test_loader  = Dataloader(test_set, batch_size = batch_size, shuffle = False)
     print("Loading datasets DONE.")
+
+    return train_loader, test_loader
