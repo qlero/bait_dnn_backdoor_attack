@@ -17,5 +17,4 @@ The original paper can be found in https://ieeexplore.ieee.org/document/11084560
   pages={510-515},
   keywords={Training;Purification;Prevention and mitigation;Image processing;Artificial neural networks;Generative adversarial networks;Adversarial machine learning;deep neural networks;adversarial machine learning;integrity risk;backdoor attacks;inpainting},
   doi={10.1109/ICIP55913.2025.11084560}}
-
 ```
