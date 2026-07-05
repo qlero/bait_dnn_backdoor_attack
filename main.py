@@ -19,6 +19,7 @@ import torch.optim as optim
 import torchvision
 
 from data.cifar10 import setup_dataloaders, train_transforms, test_transforms
+from backdoor.backdoor import bait_backdoor
 
 ####################
 # GLOBAL VARIABLES #
@@ -39,6 +40,13 @@ BATCH_SIZE = 256
 LR         = 0.001
 EPOCHS     = 100
 
+# Backdoor parameters
+TARGET_CLASS = 0
+POISON_RATIO = 0.1
+STRENGTH     = 1.0
+PATTERN_SIZE = 16
+IMAGE_SIZE   = 64
+
 if __name__ == "__main__":
 
     print("=== Running preliminaries ===")
@@ -52,7 +60,10 @@ if __name__ == "__main__":
     model    = model.to(DEVICE)
 
     # Loads backdoor method
-    # NOTE: TBD
+    backdoor = bait_backdoor(
+        TARGET_CLASS, POISON_RATIO, STRENGTH, PATTERN_SIZE, IMAGE_SIZE, 
+        DEVICE, USE_IPEX
+    )
 
     # Sets optimization
     optimizer = optim.SGD(model.parameters(), lr = LR)

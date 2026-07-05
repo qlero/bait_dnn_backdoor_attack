@@ -12,8 +12,11 @@ from torch.utils.data import DataLoader, Subset
 # data augmentation pipelines #
 ###############################
 
-cifar_mean = [0.4914, 0.4822, 0.4465]
-cifar_std  = [0.2023, 0.1994, 0.2010]
+cifar_mean = [0.5] * 3
+cifar_std  = [0.5] * 3
+
+normalizer   = T.Normalize(mean = cifar_mean, std = cifar_std)
+unnormalizer = T.Lambda(lambda img: (img + 1) / 2)
 
 base_transforms = T.Compose([
     T.Resize((64, 64)),
@@ -23,11 +26,11 @@ base_transforms = T.Compose([
 train_transforms = T.Compose([
     T.RandomCrop(64, padding=4),
     T.RandomHorizontalFlip(),
-    T.Normalize(mean = cifar_mean, std = cifar_std)
+    normalizer
 ])
 
 test_transforms = T.Compose([
-    T.Normalize(mean = cifar_mean, std = cifar_std)
+    normalizer
 ])
 
 ####################
