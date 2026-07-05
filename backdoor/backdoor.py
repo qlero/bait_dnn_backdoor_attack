@@ -70,9 +70,9 @@ class bait_backdoor():
         vertices = generate_polygon(
             center       = [self.generator_size // 2, self.generator_size // 2],
             avg_radius   = 100,
-            irregularity = 0.35,
-            spikiness    = 0.15,
-            num_vertices = 16
+            irregularity = 0.5,
+            spikiness    = 0.18,
+            num_vertices = 32
         )
         # Sets baseline
         black, white = (0), (255)
@@ -112,22 +112,21 @@ class bait_backdoor():
         """
         Injector method.
         """
-        # Picks data to poison based on poison ratio
-        filter_mask = (torch.rand(len(data)).to(self.device) < self.poison_ratio)
-        if filter_mask.sum() == 0:
-            return data, labels
-        data_to_poison = data[filter_mask]
-        # Performs injection
         with torch.no_grad():
-            # Shapes data for backdoor injection
-            data_to_poison = self.map_to_256(unnormalizer(data_to_poison))
+            # Picks data to poison based on poison ratio
+            filter_mask = (torch.rand(len(data)).to(self.device) < self.poison_ratio)
+            if filter_mask.sum() == 0:
+                return data, labels
+            data_to_poison = data[filter_mask]
+            # Performs injection
+            data_to_poison = self.map_to_256(data_to_poison)
             mask_to_poison = self.generate_mask(len(data_to_poison))
             poison_trigger = self.generate_pattern(data_to_poison, mask_to_poison)
             data_to_poison = self.strength * mask_to_poison * poison_trigger + \
                 (1 - self.strength) * mask_to_poison * data_to_poison + \
                 (1 - mask_to_poison) * data_to_poison
-        # Injects poison data back into original data
-        data[filter_mask] = normalizer(self.map_to_og(data_to_poison))
-        # Updates target labels
-        labels[filter_mask] = self.target_class
+            # Injects poison data back into original data
+            data[filter_mask] = self.map_to_og(data_to_poison)
+            # Updates target labels
+            labels[filter_mask] = self.target_class
         return data, labels, filter_mask
