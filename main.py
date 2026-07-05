@@ -40,8 +40,8 @@ print(f"Selected device: {DEVICE}")
 # Training parameters
 BATCH_SIZE = 256
 LR         = 0.001
-EPOCHS     = 6
-LR_STEPS   = [5]
+EPOCHS     = 100
+LR_STEPS   = [75, 90]
 
 # Backdoor parameters
 TARGET_CLASS = 0
@@ -178,3 +178,6 @@ if __name__ == "__main__":
     # Reports  test-time performance
     print(f"[Test phase] Accuracy            {accuracy*100:.2f}%")
     print(f"[Test phase] Attack Success Rate {attack_success_rate*100:.2f}%")
+
+    # Saves weights
+    torch.save(model.detach().cpu().state_dict(), "checkpoints/backdoored_model.pth")
