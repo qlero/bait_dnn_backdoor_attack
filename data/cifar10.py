@@ -24,9 +24,10 @@ base_transforms = T.Compose([
 ])
 
 train_transforms = T.Compose([
-    T.RandomCrop(32, padding=4),
+    T.RandomCrop(32, padding=4, fill=0.5),
     T.RandomHorizontalFlip(),
-    T.ColorJitter(brightness=0.1, hue=0.1),
+    T.RandomRotation((0, 15)),
+    T.ColorJitter(brightness=0.3, hue=0.1),
     normalizer
 ])
 
@@ -57,7 +58,7 @@ def setup_dataloaders(batch_size):
     )
     # Sets torchvision dataloaders
     train_loader = DataLoader(train_set, batch_size = batch_size, shuffle = True)
-    test_loader  = DataLoader(test_set, batch_size = batch_size, shuffle = False)
+    test_loader  = DataLoader(test_set, batch_size = 32, shuffle = False)
     print("Loading datasets DONE.")
 
     return train_loader, test_loader

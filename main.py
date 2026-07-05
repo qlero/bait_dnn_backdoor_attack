@@ -39,12 +39,12 @@ print(f"Selected device: {DEVICE}")
 
 # Training parameters
 BATCH_SIZE = 256
-LR         = 0.001
-EPOCHS     = 50
+LR         = 0.005
+EPOCHS     = 3
 LR_STEPS   = [35, 45]
 
 # Backdoor parameters
-TARGET_CLASS = 0
+TARGET_CLASS = 3
 POISON_RATIO = 0.05
 STRENGTH     = 1.0
 IMAGE_SIZE   = 32
@@ -68,7 +68,7 @@ if __name__ == "__main__":
     )
 
     # Sets optimization
-    optimizer = optim.SGD(model.parameters(), lr = LR)
+    optimizer = optim.SGD(model.parameters(), lr = LR, weight_decay=5e-4)
     criterion = nn.CrossEntropyLoss(reduction = "sum")
 
     # Optimization if IPEX is available
@@ -169,7 +169,7 @@ if __name__ == "__main__":
             data, labels = data.to(DEVICE), labels.to(DEVICE)
             data         = test_transforms(data)
             # Injects backdoor
-            data, labels, _ = backdoor.inject_backdoor(data, labels)
+            data, labels, _ = backdoor.inject_backdoor(data, labels, test = True)
             # Forward pass
             predictions = model(data)
             # Records accuracy
@@ -181,4 +181,4 @@ if __name__ == "__main__":
     print(f"[Test phase] Attack Success Rate {attack_success_rate*100:.2f}%")
 
     # Saves weights
-    torch.save(model.detach().cpu().state_dict(), "checkpoints/backdoored_model.pth")
+    torch.save(model.state_dict(), "checkpoints/backdoored_model.pth")

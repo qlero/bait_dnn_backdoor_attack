@@ -107,13 +107,16 @@ class bait_backdoor():
         _, poison_trigger, _ = self.inpainter(data * (1 - mask), mask.clone())
         return poison_trigger
 
-    def inject_backdoor(self, data, labels):
+    def inject_backdoor(self, data, labels, test = False):
         """
         Injector method.
         """
         with torch.no_grad():
             # Picks data to poison based on poison ratio
-            filter_mask = (torch.rand(len(data)).to(self.device) < self.poison_ratio)
+            if test:
+                filter_mask = torch.ones(len(data)).to(self.device) == 1
+            else:
+                filter_mask = torch.rand(len(data)).to(self.device) < self.poison_ratio
             if filter_mask.sum() == 0:
                 return data, labels
             data_to_poison = data[filter_mask]
