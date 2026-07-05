@@ -6,6 +6,13 @@ MAIN MODULE FOR CIFAR10 DATA POISONING PIPELINE USING BAIT ATTACK.
 # IMPORTS #
 ###########
 
+try:
+    # https://intel.github.io/intel-extension-for-pytorch/cpu/latest/tutorials/cheat_sheet.html
+    import intel_extension_for_pytorch as ipex
+    USE_IPEX = True
+except:
+    USE_IPEX = False
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -25,8 +32,10 @@ elif hasattr(torch, "xpu") and torch.xpu.is_available():
 else:
     DEVICE = "cpu"
 
+print(f"Selected device: {DEVICE}")
+
 # Training parameters
-BATCH_SIZE = 64
+BATCH_SIZE = 256
 LR         = 0.001
 EPOCHS     = 100
 
@@ -46,8 +55,12 @@ if __name__ == "__main__":
     # NOTE: TBD
 
     # Sets optimization
-    optimizer = optim.Adam(model.parameters(), lr = LR)
-    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.SGD(model.parameters(), lr = LR)
+    criterion = nn.CrossEntropyLoss(reduction = "sum")
+
+    # Optimization if IPEX is available
+    if USE_IPEX:
+        model, optimizer = ipex.optimize(model, optimizer = optimizer)
 
     #################
     # Training Step #
@@ -74,13 +87,12 @@ if __name__ == "__main__":
             predictions = model(data)
             # Computes loss and performs backward pass
             loss = criterion(predictions, labels)
-
             loss.backward()
             optimizer.step()
             # Records running metrics
-            running_acc  += (torch.argmax(predictions, dim=-1) == labels) / len(data)
+            running_acc  += (torch.argmax(predictions, dim=-1) == labels).detach().cpu().sum() / len(data)
             # running_asr  += # NOTE: TBD
-            running_loss += loss / len(data)
+            running_loss += loss.detach().cpu() / len(data)
         
         # Reports epoch performance
         running_acc  /= len(train_loader)
@@ -105,7 +117,7 @@ if __name__ == "__main__":
             # Forward pass
             predictions = model(data)
             # Records accuracy
-            accuracy += (torch.argmax(predictions, dim=-1) == labels) / len(data)
+            accuracy += (torch.argmax(predictions, dim=-1) == labels).detach().cpu().sum() / len(data)
         accuracy /= len(test_loader)
 
         # Computes attack success rate

@@ -42,18 +42,18 @@ def setup_dataloaders(batch_size):
     print("Loading datasets......")
     # Sets torchvision datasets
     train_set = torchvision.datasets.CIFAR10(
-        root = "./data/", 
+        root = "./cifar10/", 
         train = True, download = True, 
         transform = base_transforms
     )
     test_set = torchvision.datasets.CIFAR10(
-        root = "./data/", 
+        root = "./cifar10/", 
         train = False, download = True, 
         transform = base_transforms
     )
     # Sets torchvision dataloaders
     train_loader = DataLoader(train_set, batch_size = batch_size, shuffle = True)
-    test_loader  = Dataloader(test_set, batch_size = batch_size, shuffle = False)
+    test_loader  = DataLoader(test_set, batch_size = batch_size, shuffle = False)
     print("Loading datasets DONE.")
 
     return train_loader, test_loader
