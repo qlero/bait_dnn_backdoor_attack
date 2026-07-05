@@ -61,16 +61,16 @@ class bait_backdoor():
             import intel_extension_for_pytorch as ipex
             self.inpainter = ipex.optimize(self.inpainter)
         
-    def generate_random_mask(self, max_size):
+    def generate_random_base_mask(self):
         """
         Generate a random mask over a given input
         Based on: https://stackoverflow.com/questions/8997099/algorithm-to-generate-random-2d-polygon
         """
         # Generates baseline polygon
         vertices = generate_polygon(
-            enter        = (self.generator_size // 2),
+            center       = [self.generator_size // 2, self.generator_size // 2],
             avg_radius   = 100,
-            rregularity  = 0.35,
+            irregularity = 0.35,
             spikiness    = 0.15,
             num_vertices = 16
         )
@@ -92,13 +92,13 @@ class bait_backdoor():
         """
         Backdoor pattern Boolean mask generator.
         """
-        mask = torch.zeros(nb_elements, 1, self.generator_size, self.generator_size)
+        mask = torch.zeros(nb_elements, 1, self.generator_size, self.generator_size).to(self.device)
         for element in range(nb_elements):
             # Picks a random area over which to generate a mask
             top_x, top_y = torch.randint(0, self.generator_size - self.max_patch_size, (2,))
             # Generates
             mask[element, :, top_x:top_x+self.max_patch_size, top_y:top_y+self.max_patch_size] = \
-                self.map_to_max(self.generate_random_base_mask(self.max_patch_size))
+                self.map_to_max(self.generate_random_base_mask())
         return mask
 
     def generate_pattern(self, data, mask):
@@ -113,7 +113,7 @@ class bait_backdoor():
         Injector method.
         """
         # Picks data to poison based on poison ratio
-        filter_mask = torch.rand(len(data)) < self.poison_ratio
+        filter_mask = (torch.rand(len(data)).to(self.device) < self.poison_ratio)
         if filter_mask.sum() == 0:
             return data, labels
         data_to_poison = data[filter_mask]

@@ -83,15 +83,17 @@ if __name__ == "__main__":
 
         # Sets performance metric placeholders
         running_acc  = 0
-        # running_asr  = # NOTE: TBD
+        running_asr  = 0
         running_loss = 0
-
+        count_clean  = 0
+        count_poison = 0
         model.train()
         for batch_idx, (data, labels) in enumerate(train_loader):
             # Loads data
             data, labels = data.to(DEVICE), labels.to(DEVICE)
             data         = train_transforms(data)
             # Injects backdoor
+            data, labels, mask = backdoor.inject_backdoor(data, labels)
             # Resets optimizer
             optimizer.zero_grad()
             # Forward pass
@@ -101,14 +103,17 @@ if __name__ == "__main__":
             loss.backward()
             optimizer.step()
             # Records running metrics
-            running_acc  += (torch.argmax(predictions, dim=-1) == labels).detach().cpu().sum() / len(data)
-            # running_asr  += # NOTE: TBD
+            running_acc  += (torch.argmax(predictions[~mask], dim=-1) == labels[~mask]).detach().cpu().sum() / len(data[~mask])
+            running_asr  += (torch.argmax(predictions[mask], dim=-1) == labels[mask]).detach().cpu().sum() / len(data[mask])
+            count_clean  += (~mask).sum().detach().item()
+            count_poison += (mask).sum().detach().item()
             running_loss += loss.detach().cpu() / len(data)
         
         # Reports epoch performance
         running_acc  /= len(train_loader)
+        running_asr  /= len(train_loader)
         running_loss /= len(train_loader)
-        print(f"[Epoch {epoch+1}] Loss {running_loss:.2f}, Training accuracy {running_acc*100:.2f}%")
+        print(f"[Epoch {epoch+1}] Loss {running_loss:.4f}, Training accuracy {running_acc*100:.2f}%, Training ASR: {running_asr*100:.2f}%")
     
     ###################
     # Evaluation Step #
