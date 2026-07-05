@@ -20,8 +20,8 @@ class bait_backdoor():
 
     def __init__(
         self, 
-        target_class, poison_ratio, strength, pattern_size, image_size, device, use_ipex, 
-        max_ratio = 4
+        target_class, poison_ratio, strength, image_size, device, use_ipex, 
+        max_ratio = 3
     ):
         """ 
         Initialization method.
@@ -30,7 +30,6 @@ class bait_backdoor():
         self.target_class   = target_class
         self.poison_ratio   = poison_ratio
         self.strength       = strength
-        self.pattern_size   = pattern_size
         self.image_size     = image_size
         self.generator_size = 256
         self.max_patch_size = self.generator_size // max_ratio
@@ -69,10 +68,10 @@ class bait_backdoor():
         # Generates baseline polygon
         vertices = generate_polygon(
             center       = [self.generator_size // 2, self.generator_size // 2],
-            avg_radius   = 100,
-            irregularity = 0.5,
-            spikiness    = 0.18,
-            num_vertices = 32
+            avg_radius   = self.generator_size // 2,
+            irregularity = 0.4,
+            spikiness    = 0.3,
+            num_vertices = 18
         )
         # Sets baseline
         black, white = (0), (255)

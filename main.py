@@ -40,15 +40,14 @@ print(f"Selected device: {DEVICE}")
 # Training parameters
 BATCH_SIZE = 256
 LR         = 0.001
-EPOCHS     = 100
-LR_STEPS   = [75, 90]
+EPOCHS     = 50
+LR_STEPS   = [35, 45]
 
 # Backdoor parameters
 TARGET_CLASS = 0
-POISON_RATIO = 0.1
+POISON_RATIO = 0.05
 STRENGTH     = 1.0
-PATTERN_SIZE = 16
-IMAGE_SIZE   = 64
+IMAGE_SIZE   = 32
 
 if __name__ == "__main__":
 
@@ -64,7 +63,7 @@ if __name__ == "__main__":
 
     # Loads backdoor method
     backdoor = bait_backdoor(
-        TARGET_CLASS, POISON_RATIO, STRENGTH, PATTERN_SIZE, IMAGE_SIZE, 
+        TARGET_CLASS, POISON_RATIO, STRENGTH, IMAGE_SIZE, 
         DEVICE, USE_IPEX
     )
 
@@ -117,9 +116,11 @@ if __name__ == "__main__":
                 difference_data  /= difference_data.max()
                 to_save           = \
                     torch.cat([saved_benign_data[:3], saved_poison_data[:3], difference_data[:3]], dim = 0)
-                print(to_save.shape)
                 save_image(make_grid(to_save, nrow = 3),"checkpoints/example_poisons.png")
-                image_saved_checkpoint = True             
+                image_saved_checkpoint = True  
+                del saved_benign_data
+                del saved_poison_data
+                del difference_data           
             # Resets optimizer
             optimizer.zero_grad()
             # Forward pass
