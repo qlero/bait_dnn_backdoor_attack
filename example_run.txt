@@ -1,0 +1,61 @@
+Selected device: xpu
+=== Running preliminaries ===
+Loading datasets......
+Loading datasets DONE.
+=== Starting Training ===
+
+[Epoch 1] Loss 0.0128, Training accuracy 43.09%, Training ASR: 18.54%
+[Epoch 2] Loss 0.0087, Training accuracy 63.33%, Training ASR: 17.59%
+[Epoch 3] Loss 0.0067, Training accuracy 70.74%, Training ASR: 58.10%
+[Epoch 4] Loss 0.0055, Training accuracy 75.24%, Training ASR: 86.70%
+[Epoch 5] Loss 0.0048, Training accuracy 78.55%, Training ASR: 88.43%
+[INFO] Update learning rate: 0.01 -> 0.001
+[Epoch 6] Loss 0.0035, Training accuracy 84.55%, Training ASR: 91.47%
+[Epoch 7] Loss 0.0032, Training accuracy 85.84%, Training ASR: 91.98%
+[Epoch 8] Loss 0.0030, Training accuracy 86.53%, Training ASR: 92.95%
+[Epoch 9] Loss 0.0029, Training accuracy 86.83%, Training ASR: 93.06%
+[Epoch 10] Loss 0.0028, Training accuracy 87.54%, Training ASR: 93.33%
+[Epoch 11] Loss 0.0027, Training accuracy 87.85%, Training ASR: 93.17%
+[Epoch 12] Loss 0.0026, Training accuracy 88.40%, Training ASR: 94.67%
+[Epoch 13] Loss 0.0025, Training accuracy 88.89%, Training ASR: 94.32%
+[Epoch 14] Loss 0.0024, Training accuracy 88.99%, Training ASR: 93.38%
+[Epoch 15] Loss 0.0023, Training accuracy 89.47%, Training ASR: 94.77%
+[Epoch 16] Loss 0.0022, Training accuracy 89.87%, Training ASR: 95.82%
+[Epoch 17] Loss 0.0021, Training accuracy 90.30%, Training ASR: 95.57%
+[Epoch 18] Loss 0.0021, Training accuracy 90.78%, Training ASR: 96.23%
+[Epoch 19] Loss 0.0020, Training accuracy 90.89%, Training ASR: 96.57%
+[Epoch 20] Loss 0.0020, Training accuracy 91.37%, Training ASR: 95.59%
+[Epoch 21] Loss 0.0019, Training accuracy 91.57%, Training ASR: 96.32%
+[Epoch 22] Loss 0.0018, Training accuracy 91.95%, Training ASR: 96.72%
+[Epoch 23] Loss 0.0017, Training accuracy 92.21%, Training ASR: 96.41%
+[Epoch 24] Loss 0.0016, Training accuracy 92.57%, Training ASR: 96.91%
+[Epoch 25] Loss 0.0016, Training accuracy 92.80%, Training ASR: 96.90%
+[Epoch 26] Loss 0.0015, Training accuracy 93.13%, Training ASR: 97.08%
+[Epoch 27] Loss 0.0015, Training accuracy 93.11%, Training ASR: 96.71%
+[Epoch 28] Loss 0.0014, Training accuracy 93.59%, Training ASR: 97.40%
+[Epoch 29] Loss 0.0014, Training accuracy 93.67%, Training ASR: 97.30%
+[Epoch 30] Loss 0.0013, Training accuracy 93.93%, Training ASR: 97.29%
+[Epoch 31] Loss 0.0013, Training accuracy 94.11%, Training ASR: 96.94%
+[Epoch 32] Loss 0.0012, Training accuracy 94.67%, Training ASR: 98.22%
+[Epoch 33] Loss 0.0012, Training accuracy 94.84%, Training ASR: 98.14%
+[Epoch 34] Loss 0.0012, Training accuracy 94.79%, Training ASR: 97.20%
+[Epoch 35] Loss 0.0011, Training accuracy 95.07%, Training ASR: 97.67%
+[INFO] Update learning rate: 0.001 -> 0.0001
+[Epoch 36] Loss 0.0009, Training accuracy 96.41%, Training ASR: 98.19%
+[Epoch 37] Loss 0.0008, Training accuracy 96.96%, Training ASR: 98.14%
+[Epoch 38] Loss 0.0008, Training accuracy 96.97%, Training ASR: 97.67%
+[Epoch 39] Loss 0.0007, Training accuracy 97.14%, Training ASR: 98.22%
+[Epoch 40] Loss 0.0007, Training accuracy 97.22%, Training ASR: 98.69%
+[Epoch 41] Loss 0.0007, Training accuracy 97.23%, Training ASR: 98.00%
+[Epoch 42] Loss 0.0007, Training accuracy 97.27%, Training ASR: 98.24%
+[Epoch 43] Loss 0.0007, Training accuracy 97.39%, Training ASR: 98.35%
+[Epoch 44] Loss 0.0007, Training accuracy 97.42%, Training ASR: 98.74%
+[Epoch 45] Loss 0.0007, Training accuracy 97.42%, Training ASR: 98.10%
+[INFO] Update learning rate: 0.0001 -> 1e-05
+[Epoch 46] Loss 0.0007, Training accuracy 97.57%, Training ASR: 98.17%
+[Epoch 47] Loss 0.0007, Training accuracy 97.57%, Training ASR: 98.54%
+[Epoch 48] Loss 0.0006, Training accuracy 97.60%, Training ASR: 98.40%
+[Epoch 49] Loss 0.0006, Training accuracy 97.53%, Training ASR: 97.77%
+[Epoch 50] Loss 0.0006, Training accuracy 97.57%, Training ASR: 97.66%
+[Test phase] Accuracy            88.83%
+[Test phase] Attack Success Rate 99.45%

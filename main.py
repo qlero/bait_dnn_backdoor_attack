@@ -20,8 +20,9 @@ import torchvision
 
 from torchvision.utils import save_image, make_grid
 
-from data.cifar10 import setup_dataloaders, train_transforms, test_transforms, unnormalizer
+from architecture.resnet import ResNet18
 from backdoor.backdoor import bait_backdoor
+from data.cifar10 import setup_dataloaders, train_transforms, test_transforms, unnormalizer
 
 ####################
 # GLOBAL VARIABLES #
@@ -38,16 +39,16 @@ else:
 print(f"Selected device: {DEVICE}")
 
 # Training parameters
-BATCH_SIZE = 256
-LR         = 0.005
-EPOCHS     = 3
-LR_STEPS   = [35, 45]
+BATCH_SIZE = 128
+LR         = 0.01
+EPOCHS     = 50
+LR_STEPS   = [5, 35, 45]
 
 # Backdoor parameters
 TARGET_CLASS = 3
 POISON_RATIO = 0.05
-STRENGTH     = 1.0
-IMAGE_SIZE   = 32
+STRENGTH     = 1
+IMAGE_SIZE   = 64
 
 if __name__ == "__main__":
 
@@ -57,9 +58,8 @@ if __name__ == "__main__":
     train_loader, test_loader = setup_dataloaders(BATCH_SIZE)
 
     # Loads model
-    model    = torchvision.models.resnet18(weights = None)
-    model.fc = nn.Linear(model.fc.in_features, 10)
-    model    = model.to(DEVICE)
+    model = ResNet18()
+    model = model.to(DEVICE)
 
     # Loads backdoor method
     backdoor = bait_backdoor(
@@ -68,8 +68,8 @@ if __name__ == "__main__":
     )
 
     # Sets optimization
-    optimizer = optim.SGD(model.parameters(), lr = LR, weight_decay=5e-4)
-    criterion = nn.CrossEntropyLoss(reduction = "sum")
+    optimizer = optim.SGD(model.parameters(), lr = LR, momentum = 0.9, weight_decay=5e-4)
+    criterion = nn.CrossEntropyLoss()
 
     # Optimization if IPEX is available
     if USE_IPEX:
@@ -131,9 +131,10 @@ if __name__ == "__main__":
             optimizer.step()
             # Records running metrics
             running_acc  += (torch.argmax(predictions[~mask], dim=-1) == labels[~mask]).detach().cpu().sum() / len(data[~mask])
-            running_asr  += (torch.argmax(predictions[mask], dim=-1) == labels[mask]).detach().cpu().sum() / len(data[mask])
             count_clean  += (~mask).sum().detach().item()
-            count_poison += (mask).sum().detach().item()
+            if mask.sum() != 0:
+                running_asr  += (torch.argmax(predictions[mask], dim=-1) == labels[mask]).detach().cpu().sum() / len(data[mask])
+                count_poison += (mask).sum().detach().item()
             running_loss += loss.detach().cpu() / len(data)
         
         # Reports epoch performance

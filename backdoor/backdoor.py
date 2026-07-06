@@ -69,9 +69,9 @@ class bait_backdoor():
         vertices = generate_polygon(
             center       = [self.generator_size // 2, self.generator_size // 2],
             avg_radius   = self.generator_size // 2,
-            irregularity = 0.4,
-            spikiness    = 0.3,
-            num_vertices = 18
+            irregularity = 0.45,
+            spikiness    = 0.18,
+            num_vertices = 26
         )
         # Sets baseline
         black, white = (0), (255)
@@ -118,7 +118,7 @@ class bait_backdoor():
             else:
                 filter_mask = torch.rand(len(data)).to(self.device) < self.poison_ratio
             if filter_mask.sum() == 0:
-                return data, labels
+                return data, labels, filter_mask
             data_to_poison = data[filter_mask]
             # Performs injection
             data_to_poison = self.map_to_256(data_to_poison)

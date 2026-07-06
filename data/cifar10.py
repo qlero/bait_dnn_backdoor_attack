@@ -19,14 +19,14 @@ normalizer   = T.Normalize(mean = cifar_mean, std = cifar_std)
 unnormalizer = T.Lambda(lambda img: (img + 1) / 2)
 
 base_transforms = T.Compose([
-    T.Resize((32, 32)),
+    T.Resize((64,64)),
     T.ToTensor()
 ])
 
 train_transforms = T.Compose([
-    T.RandomCrop(32, padding=4, fill=0.5),
+    T.RandomCrop(64, padding=4, fill=0.5),
     T.RandomHorizontalFlip(),
-    T.RandomRotation((0, 15)),
+    T.RandomRotation((0, 15), fill=0.5),
     T.ColorJitter(brightness=0.3, hue=0.1),
     normalizer
 ])
